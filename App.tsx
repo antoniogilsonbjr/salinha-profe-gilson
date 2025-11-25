@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import Whiteboard from './components/Whiteboard.tsx';
-import Toolbar from './components/Toolbar.tsx';
-import type { Tool, CanvasElement, ImageElement, SyncMessage } from './types.ts';
+import Whiteboard from './components/Whiteboard';
+import Toolbar from './components/Toolbar';
+import type { Tool, CanvasElement, ImageElement, SyncMessage } from './types';
 import * as pdfjsLib from 'pdfjs-dist';
-import { CameraIcon, CameraOffIcon, MicIcon, MicOffIcon, ExitIcon, ClipboardIcon } from './components/icons/index.tsx';
+import { CameraIcon, CameraOffIcon, MicIcon, MicOffIcon, ExitIcon, ClipboardIcon } from './components/icons/index';
 import { Peer } from 'peerjs';
 
 // Configura o worker do PDF.js

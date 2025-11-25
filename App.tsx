@@ -9,6 +9,11 @@ import { Peer } from 'peerjs';
 // Configura o worker do PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://esm.sh/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
 
+// --- CONFIGURAÇÃO DO SERVIDOR ---
+'salinha-profe-gilson.onrender.com'
+// Exemplo: 'servidor-aulas-profe.onrender.com'
+const PEER_SERVER_HOST = ''; 
+
 type ConnectionState = 'disconnected' | 'connecting' | 'connected';
 type UserRole = 'host' | 'guest' | null;
 
@@ -119,17 +124,29 @@ const App: React.FC = () => {
       setConnectionState('connecting');
       setRole(type);
 
-      // Gera ID local curto se for host, ou usa aleatório se guest
-      const customId = type === 'host' ? `aula-${Math.floor(Math.random() * 10000)}` : undefined;
+      // Gera ID local: Host cria UUID, Guest não precisa de ID fixo
+      const customId = type === 'host' ? crypto.randomUUID().substring(0, 8) : undefined;
 
-      const peer = new (Peer as any)(customId, {
-          config: {
-              iceServers: [
-                  { urls: 'stun:stun.l.google.com:19302' },
-                  { urls: 'stun:global.stun.twilio.com:3478' }
-              ]
-          }
-      });
+      // Configuração da conexão
+      const peerConfig: any = {
+        config: {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:global.stun.twilio.com:3478' }
+            ]
+        }
+      };
+
+      // Se o usuário configurou o servidor Render, usa ele
+      if (PEER_SERVER_HOST) {
+          console.log("Usando servidor privado:", PEER_SERVER_HOST);
+          peerConfig.host = PEER_SERVER_HOST;
+          peerConfig.port = 443;
+          peerConfig.path = '/myapp';
+          peerConfig.secure = true;
+      }
+
+      const peer = new (Peer as any)(customId, peerConfig);
       peerRef.current = peer;
 
       peer.on('open', (id: string) => {
@@ -204,7 +221,7 @@ const App: React.FC = () => {
       // Timeout para evitar loading infinito
       const connectionTimeout = setTimeout(() => {
           if (connectionState !== 'connected') {
-              alert("Tempo limite excedido. Verifique se o Professor já iniciou a aula.");
+              alert("Não foi possível conectar. Verifique se o professor já iniciou a aula ou tente novamente.");
               setConnectionState('disconnected');
               setRole(null);
           }

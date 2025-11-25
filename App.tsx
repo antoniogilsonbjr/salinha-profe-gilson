@@ -12,7 +12,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://esm.sh/pdfjs-dist@4.0.379/buil
 // --- CONFIGURAÇÃO DO SERVIDOR ---
 'salinha-profe-gilson.onrender.com'
 // Exemplo: 'servidor-aulas-profe.onrender.com'
-const PEER_SERVER_HOST = ''; 
+const PEER_SERVER_HOST = 'salinha-profe-gilson.onrender.com'; 
 
 type ConnectionState = 'disconnected' | 'connecting' | 'connected';
 type UserRole = 'host' | 'guest' | null;
